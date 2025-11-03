@@ -1,9 +1,8 @@
 package com.blue.apartamentos.models;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.*;
 
@@ -11,45 +10,66 @@ import jakarta.persistence.*;
 @Table(name = "reservaciones")
 public class ReservacionModel {
 
-    public enum EstadoReservacion {
-        PENDIENTE, CONFIRMADA, CANCELADA
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_reservacion")
-    private Long id;
+    private Long idReservacion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    // FK: propiedades.id_propiedad
+    @ManyToOne(optional = false)
     @JoinColumn(name = "id_propiedad", nullable = false)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private PropiedadModel propiedad;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cliente", nullable = false)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-    private ClienteModel cliente;
+    // FK: usuarios.id_usuario (en tu DER es "id_cliente")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private UsuarioModel usuario;
 
-    @Column(name = "fecha_entrada", nullable = false)
+    @Column(name = "fecha_entrada")
     private LocalDate fechaEntrada;
 
-    @Column(name = "fecha_salida", nullable = false)
+    @Column(name = "fecha_salida")
     private LocalDate fechaSalida;
 
+    @Column(name = "numero_huespedes")
+    private Integer numeroHuespedes;
+
+    @Column(name = "precio_total", precision = 10, scale = 2)
+    private BigDecimal precioTotal;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado", nullable = false)
-    private EstadoReservacion estado = EstadoReservacion.PENDIENTE;
+    @Column(name = "estado")
+    private EstadoReservacion estado;
 
-    @Column(name = "fecha_creacion", nullable = false)
-    private LocalDateTime fechaCreacion = LocalDateTime.now();
+    @Column(name = "fecha_reservacion")
+    private LocalDateTime fechaReservacion;
 
-    // Getters/Setters
-    public Long getId() {
-        return id;
+    @Column(name = "notas", columnDefinition = "text")
+    private String notas;
+
+    @Column(name = "codigo_reserva")
+    private String codigoReserva;
+
+    @Column(name = "fecha_checkin")
+    private LocalDateTime fechaCheckin;
+
+    @Column(name = "fecha_checkout")
+    private LocalDateTime fechaCheckout;
+
+    public enum EstadoReservacion {
+    PENDIENTE,
+    CONFIRMADA,
+    PAGADA,
+    CANCELADA
+}
+
+    // ===== Getters y Setters simples =====
+    public Long getIdReservacion() {
+        return idReservacion;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdReservacion(Long idReservacion) {
+        this.idReservacion = idReservacion;
     }
 
     public PropiedadModel getPropiedad() {
@@ -60,12 +80,12 @@ public class ReservacionModel {
         this.propiedad = propiedad;
     }
 
-    public ClienteModel getCliente() {
-        return cliente;
+    public UsuarioModel getUsuario() {
+        return usuario;
     }
 
-    public void setCliente(ClienteModel cliente) {
-        this.cliente = cliente;
+    public void setUsuario(UsuarioModel usuario) {
+        this.usuario = usuario;
     }
 
     public LocalDate getFechaEntrada() {
@@ -84,6 +104,22 @@ public class ReservacionModel {
         this.fechaSalida = fechaSalida;
     }
 
+    public Integer getNumeroHuespedes() {
+        return numeroHuespedes;
+    }
+
+    public void setNumeroHuespedes(Integer numeroHuespedes) {
+        this.numeroHuespedes = numeroHuespedes;
+    }
+
+    public BigDecimal getPrecioTotal() {
+        return precioTotal;
+    }
+
+    public void setPrecioTotal(BigDecimal precioTotal) {
+        this.precioTotal = precioTotal;
+    }
+
     public EstadoReservacion getEstado() {
         return estado;
     }
@@ -92,52 +128,43 @@ public class ReservacionModel {
         this.estado = estado;
     }
 
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
+    public LocalDateTime getFechaReservacion() {
+        return fechaReservacion;
     }
 
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
+    public void setFechaReservacion(LocalDateTime fechaReservacion) {
+        this.fechaReservacion = fechaReservacion;
     }
 
-    // Alias para compatibilidad con nombres viejos
-    @Deprecated
-    public Long getId_reservacion() {
-        return id;
+    public String getNotas() {
+        return notas;
     }
 
-    @Deprecated
-    public void setId_reservacion(Long v) {
-        this.id = v;
+    public void setNotas(String notas) {
+        this.notas = notas;
     }
 
-    @Deprecated
-    public LocalDate getFecha_entrada() {
-        return fechaEntrada;
+    public String getCodigoReserva() {
+        return codigoReserva;
     }
 
-    @Deprecated
-    public void setFecha_entrada(LocalDate v) {
-        this.fechaEntrada = v;
+    public void setCodigoReserva(String codigoReserva) {
+        this.codigoReserva = codigoReserva;
     }
 
-    @Deprecated
-    public LocalDate getFecha_salida() {
-        return fechaSalida;
+    public LocalDateTime getFechaCheckin() {
+        return fechaCheckin;
     }
 
-    @Deprecated
-    public void setFecha_salida(LocalDate v) {
-        this.fechaSalida = v;
+    public void setFechaCheckin(LocalDateTime fechaCheckin) {
+        this.fechaCheckin = fechaCheckin;
+    }
+
+    public LocalDateTime getFechaCheckout() {
+        return fechaCheckout;
+    }
+
+    public void setFechaCheckout(LocalDateTime fechaCheckout) {
+        this.fechaCheckout = fechaCheckout;
     }
 }
-
-/*{
-  "cliente": { "id": 1 },
-  "propiedad": { "id_propiedad": 1 },
-  "fechaEntrada": "2025-11-05T15:00:00",
-  "fechaSalida": "2025-11-10T11:00:00",
-  "estado": "CONFIRMADA",
-  "total": 4750.0
-}
- */

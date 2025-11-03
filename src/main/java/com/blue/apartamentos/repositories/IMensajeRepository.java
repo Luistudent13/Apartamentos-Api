@@ -1,14 +1,14 @@
 package com.blue.apartamentos.repositories;
 
 import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
 import com.blue.apartamentos.models.MensajeModel;
 
-@Repository
 public interface IMensajeRepository extends JpaRepository<MensajeModel, Long> {
 
-    List<MensajeModel> findByDestinatarioIdOrderByFechaEnvioDesc(Long idDestinatario);
+    // ✅ USAR este (coincide con la PK real de UsuarioModel: idUsuario)
+    List<MensajeModel> findByRemitente_IdUsuarioOrDestinatario_IdUsuario(Long remitenteId, Long destinatarioId);
+
+    // (opcional, ordenado por fecha)
+    List<MensajeModel> findByRemitente_IdUsuarioOrDestinatario_IdUsuarioOrderByFechaEnvioDesc(Long u1, Long u2);
 }

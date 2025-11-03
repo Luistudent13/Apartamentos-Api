@@ -1,38 +1,36 @@
 package com.blue.apartamentos.models;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "disponibilidades")
+@Table(name = "disponibilidad")
 public class DisponibilidadModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_disponibilidad")
-    private Long id;
+    private Long idDisponibilidad;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "id_propiedad", nullable = false)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private PropiedadModel propiedad;
 
-    @Column(name = "fecha_inicio", nullable = false)
-    private LocalDateTime fechaInicio;
+    @Column(name = "fecha", nullable = false)
+    private LocalDate fecha;
+    @Column(name = "disponible", nullable = false)
+    private Boolean disponible = true;
+    @Column(name = "precio_especial", precision = 12, scale = 2)
+    private BigDecimal precioEspecial;
 
-    @Column(name = "fecha_fin", nullable = false)
-    private LocalDateTime fechaFin;
-
-    // Getters/Setters
-    public Long getId() {
-        return id;
+    // getters/setters
+    public Long getIdDisponibilidad() {
+        return idDisponibilidad;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdDisponibilidad(Long idDisponibilidad) {
+        this.idDisponibilidad = idDisponibilidad;
     }
 
     public PropiedadModel getPropiedad() {
@@ -43,48 +41,27 @@ public class DisponibilidadModel {
         this.propiedad = propiedad;
     }
 
-    public LocalDateTime getFechaInicio() {
-        return fechaInicio;
+    public LocalDate getFecha() {
+        return fecha;
     }
 
-    public void setFechaInicio(LocalDateTime fechaInicio) {
-        this.fechaInicio = fechaInicio;
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
     }
 
-    public LocalDateTime getFechaFin() {
-        return fechaFin;
+    public Boolean getDisponible() {
+        return disponible;
     }
 
-    public void setFechaFin(LocalDateTime fechaFin) {
-        this.fechaFin = fechaFin;
+    public void setDisponible(Boolean disponible) {
+        this.disponible = disponible;
     }
 
-    // Alias
-    @Deprecated
-    public LocalDateTime getFecha_inicio() {
-        return fechaInicio;
+    public BigDecimal getPrecioEspecial() {
+        return precioEspecial;
     }
 
-    @Deprecated
-    public void setFecha_inicio(LocalDateTime v) {
-        this.fechaInicio = v;
-    }
-
-    @Deprecated
-    public LocalDateTime getFecha_fin() {
-        return fechaFin;
-    }
-
-    @Deprecated
-    public void setFecha_fin(LocalDateTime v) {
-        this.fechaFin = v;
+    public void setPrecioEspecial(BigDecimal precioEspecial) {
+        this.precioEspecial = precioEspecial;
     }
 }
-
-/*{
-  "propiedad": { "id_propiedad": 1 },
-  "fechaInicio": "2025-11-01T00:00:00",
-  "fechaFin": "2025-11-15T23:59:59",
-  "disponible": true
-}
- */

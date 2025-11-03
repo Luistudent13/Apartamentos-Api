@@ -9,8 +9,11 @@ import com.blue.apartamentos.models.PropiedadModel;
 
 @Repository
 public interface IPropiedadRepository extends JpaRepository<PropiedadModel, Long> {
+    // Aparte de los metodos heredados de JpaRepository, puedes definir consultas personalizadas aquí
 
-    List<PropiedadModel> findByTipo(PropiedadModel.TipoPropiedad tipo);
+    //Este metodo recupera las propiedades por ciudad y se debe agregar aqui cuando queires aumentar la funcionalidad
+    List<PropiedadModel> findByCiudad(String ciudad);
 
-    List<PropiedadModel> findByPropietarioId(Long idPropietario);
+    List<PropiedadModel> findByPais(String pais);
+    
 }

@@ -1,24 +1,20 @@
 package com.blue.apartamentos.services;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.blue.apartamentos.models.PropiedadImagenModel;
 import com.blue.apartamentos.repositories.IPropiedadImagenRepository;
 
 @Service
+@Transactional
 public class PropiedadImagenService {
+    private final IPropiedadImagenRepository repo;
+    public PropiedadImagenService(IPropiedadImagenRepository repo){ this.repo = repo; }
 
-    @Autowired
-    private IPropiedadImagenRepository repo;
-
-    public PropiedadImagenModel save(PropiedadImagenModel img) {
-        return repo.save(img);
+    public List<PropiedadImagenModel> porPropiedad(Long idPropiedad){
+        return repo.findByPropiedad_IdPropiedadOrderByOrdenAsc(idPropiedad);
     }
-
-    public List<PropiedadImagenModel> listByPropiedad(Long idPropiedad) {
-        return repo.findByPropiedad_IdOrderByOrdenAsc(idPropiedad);
-    }
+    public PropiedadImagenModel guardar(PropiedadImagenModel m){ return repo.save(m); }
+    public void eliminar(Long id){ repo.deleteById(id); }
 }

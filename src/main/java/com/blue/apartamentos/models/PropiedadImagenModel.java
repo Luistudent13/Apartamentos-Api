@@ -1,10 +1,7 @@
 package com.blue.apartamentos.models;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "propiedad_imagenes")
@@ -13,32 +10,28 @@ public class PropiedadImagenModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_imagen")
-    private Long id;
+    private Long idImagen;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "id_propiedad", nullable = false)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private PropiedadModel propiedad;
 
-    @Column(name = "url_imagen", nullable = false, length = 500)
-    private String url_imagen;
-
+    @Column(name = "url_imagen", nullable = false)
+    private String urlImagen;
     @Column(name = "orden")
     private Integer orden;
-
     @Column(name = "es_principal")
-    private Boolean es_principal = Boolean.FALSE;
+    private Boolean esPrincipal = false;
+    @Column(name = "fecha_subida")
+    private LocalDateTime fechaSubida = LocalDateTime.now();
 
-    @Column(name = "fecha_subida", nullable = false)
-    private LocalDateTime fecha_subida = LocalDateTime.now();
-
-    // Getters/Setters
-    public Long getId() {
-        return id;
+    // getters/setters
+    public Long getIdImagen() {
+        return idImagen;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdImagen(Long idImagen) {
+        this.idImagen = idImagen;
     }
 
     public PropiedadModel getPropiedad() {
@@ -49,12 +42,12 @@ public class PropiedadImagenModel {
         this.propiedad = propiedad;
     }
 
-    public String getUrl_imagen() {
-        return url_imagen;
+    public String getUrlImagen() {
+        return urlImagen;
     }
 
-    public void setUrl_imagen(String url_imagen) {
-        this.url_imagen = url_imagen;
+    public void setUrlImagen(String urlImagen) {
+        this.urlImagen = urlImagen;
     }
 
     public Integer getOrden() {
@@ -65,19 +58,36 @@ public class PropiedadImagenModel {
         this.orden = orden;
     }
 
-    public Boolean getEs_principal() {
-        return es_principal;
+    public Boolean getEsPrincipal() {
+        return esPrincipal;
     }
 
-    public void setEs_principal(Boolean es_principal) {
-        this.es_principal = es_principal;
+    public void setEsPrincipal(Boolean esPrincipal) {
+        this.esPrincipal = esPrincipal;
     }
 
-    public LocalDateTime getFecha_subida() {
-        return fecha_subida;
+    public LocalDateTime getFechaSubida() {
+        return fechaSubida;
     }
 
-    public void setFecha_subida(LocalDateTime fecha_subida) {
-        this.fecha_subida = fecha_subida;
+    public void setFechaSubida(LocalDateTime fechaSubida) {
+        this.fechaSubida = fechaSubida;
     }
 }
+/*
+POST http://localhost:10101/propiedad-imagenes
+ {
+  "propiedad": {
+    "idPropiedad": 1
+  },
+  "urlImagen": "https://mi-servidor.com/imagenes/apartamento1_fachada.jpg",
+  "orden": 1,
+  "esPrincipal": true,
+  "fechaSubida": "2025-11-02T18:45:00"
+}
+
+
+PUT http://localhost:10101/propiedad-imagenes/1
+
+
+ */

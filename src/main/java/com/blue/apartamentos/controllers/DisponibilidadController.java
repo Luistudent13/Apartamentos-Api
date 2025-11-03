@@ -1,39 +1,21 @@
 package com.blue.apartamentos.controllers;
 
+import com.blue.apartamentos.services.DisponibilidadService;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import com.blue.apartamentos.models.DisponibilidadModel;
-import com.blue.apartamentos.repositories.IDisponibilidadRepository;
-
 @RestController
-@RequestMapping("/api/disponibilidades")
-@CrossOrigin(origins = "*")
+@RequestMapping("/disponibilidad")
 public class DisponibilidadController {
+  private final DisponibilidadService servicio;
+  public DisponibilidadController(DisponibilidadService s){ this.servicio = s; }
 
-    @Autowired
-    private IDisponibilidadRepository disponibilidadRepository;
-
-    @GetMapping("/propiedad/{idPropiedad}")
-    public ResponseEntity<List<DisponibilidadModel>> porRango(
-            @PathVariable Long idPropiedad,
-            @RequestParam String desde,
-            @RequestParam String hasta) {
-
-        LocalDate iniDate = LocalDate.parse(desde);
-        LocalDate finDate = LocalDate.parse(hasta);
-
-        LocalDateTime ini = iniDate.atStartOfDay();
-        LocalDateTime fi = finDate.atTime(23, 59, 59);
-
-        List<DisponibilidadModel> lista = disponibilidadRepository
-            .findByPropiedad_IdAndFechaInicioLessThanEqualAndFechaFinGreaterThanEqual(idPropiedad, fi, ini);
-
-        return ResponseEntity.ok(lista);
-    }
+  // GET /disponibilidad/comprobar?idPropiedad=1&desde=2025-11-10&hasta=2025-11-15
+  @GetMapping("/comprobar")
+  public boolean comprobar(@RequestParam Long idPropiedad,
+                           @RequestParam @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) LocalDate desde,
+                           @RequestParam @DateTimeFormat(iso=DateTimeFormat.ISO.DATE) LocalDate hasta){
+    return servicio.estaDisponible(idPropiedad, desde, hasta);
+  }
 }

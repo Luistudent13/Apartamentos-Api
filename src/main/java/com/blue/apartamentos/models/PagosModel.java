@@ -1,57 +1,48 @@
 package com.blue.apartamentos.models;
 
-import java.time.LocalDateTime;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pagos")
 public class PagosModel {
 
-    public enum MetodoPago {
-        TARJETA_CREDITO, TARJETA_DEBITO, EFECTIVO, TRANSFERENCIA
-    }
-
-    public enum EstadoPago {
-        PENDIENTE, COMPLETADO, FALLIDO, REEMBOLSADO
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pago")
-    private Long id;
+    private Long idPago;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "id_reservacion", nullable = false)
-    @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
     private ReservacionModel reservacion;
 
-    @Column(name = "monto", nullable = false)
-    private Double monto;
-
+    @Column(name = "monto", precision = 12, scale = 2, nullable = false)
+    private BigDecimal monto;
     @Enumerated(EnumType.STRING)
-    @Column(name = "metodo", nullable = false)
-    private MetodoPago metodo = MetodoPago.TRANSFERENCIA;
-
+    @Column(name = "metodo_pago")
+    private MetodoPago metodoPago = MetodoPago.EFECTIVO;
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado", nullable = false)
+    @Column(name = "estado")
     private EstadoPago estado = EstadoPago.PENDIENTE;
 
-    @Column(name = "referencia_pago", length = 120)
+    @Column(name = "fecha_pago")
+    private LocalDateTime fechaPago;
+    @Column(name = "referencia_pago", length = 80)
     private String referenciaPago;
+    @Lob
+    @Column(name = "datos_pago")
+    private String datosPago;
+    @Column(name = "fecha_creacion")
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    @Column(name = "fecha_pago", nullable = false)
-    private LocalDateTime fechaPago = LocalDateTime.now();
-
-    // Getters/Setters
-    public Long getId() {
-        return id;
+    // getters/setters
+    public Long getIdPago() {
+        return idPago;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setIdPago(Long idPago) {
+        this.idPago = idPago;
     }
 
     public ReservacionModel getReservacion() {
@@ -62,20 +53,20 @@ public class PagosModel {
         this.reservacion = reservacion;
     }
 
-    public Double getMonto() {
+    public BigDecimal getMonto() {
         return monto;
     }
 
-    public void setMonto(Double monto) {
+    public void setMonto(BigDecimal monto) {
         this.monto = monto;
     }
 
-    public MetodoPago getMetodo() {
-        return metodo;
+    public MetodoPago getMetodoPago() {
+        return metodoPago;
     }
 
-    public void setMetodo(MetodoPago metodo) {
-        this.metodo = metodo;
+    public void setMetodoPago(MetodoPago metodoPago) {
+        this.metodoPago = metodoPago;
     }
 
     public EstadoPago getEstado() {
@@ -86,6 +77,14 @@ public class PagosModel {
         this.estado = estado;
     }
 
+    public LocalDateTime getFechaPago() {
+        return fechaPago;
+    }
+
+    public void setFechaPago(LocalDateTime fechaPago) {
+        this.fechaPago = fechaPago;
+    }
+
     public String getReferenciaPago() {
         return referenciaPago;
     }
@@ -94,11 +93,27 @@ public class PagosModel {
         this.referenciaPago = referenciaPago;
     }
 
-    public LocalDateTime getFechaPago() {
-        return fechaPago;
+    public String getDatosPago() {
+        return datosPago;
     }
 
-    public void setFechaPago(LocalDateTime fechaPago) {
-        this.fechaPago = fechaPago;
+    public void setDatosPago(String datosPago) {
+        this.datosPago = datosPago;
+    }
+
+    public LocalDateTime getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(LocalDateTime fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public enum MetodoPago {
+        EFECTIVO, TARJETA, TRANSFERENCIA
+    }
+
+    public enum EstadoPago {
+        PENDIENTE, COMPLETADO, FALLIDO
     }
 }
